@@ -1,0 +1,72 @@
+<section class="max-w-4xl mx-auto mt-12 p-6 bg-white border-[3px] border-black sketch-border shadow-[8px_8px_0px_0px_black]">
+    <h2 class="text-3xl font-black text-center mb-8">UMC Study Plan</h2>
+    
+    <div class="mb-10">
+        <input type="text" id="todo-input" placeholder="할 일을 입력하고 Enter를 누르세요!" 
+            class="w-full p-4 border-[3px] border-black rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-[#FF7043] shadow-[4px_4px_0px_0px_black] text-center">
+    </div>
+
+    <div class="flex flex-col md:flex-row gap-10">
+        <div class="flex-1">
+            <div class="text-center mb-4">
+                <h3 class="text-xl font-black pb-2 border-b-4 border-black inline-block">해야 할 일</h3>
+            </div>
+            <ul id="todo-list" class="space-y-3">
+                </ul>
+        </div>
+
+        <div class="flex-1">
+            <div class="text-center mb-4">
+                <h3 class="text-xl font-black pb-2 border-b-4 border-[#FF7043] inline-block text-[#FF7043]">해낸 일</h3>
+            </div>
+            <ul id="done-list" class="space-y-3">
+                </ul>
+        </div>
+    </div>
+</section>
+
+<script>
+    const input = document.getElementById('todo-input');
+    const todoList = document.getElementById('todo-list');
+    const doneList = document.getElementById('done-list');
+
+    // Enter 입력 시 추가 (한글 중복 입력 방지 추가)
+    input.addEventListener('keydown', (e) => {
+        if (e.isComposing) return; // 한글 입력 시 튕김/중복 방지
+        if (e.key === 'Enter' && input.value.trim() !== '') {
+            e.preventDefault(); // 엔터 시 페이지 들썩거림 방지
+            addTodo(input.value);
+            input.value = '';
+        }
+    });
+
+    function addTodo(text) {
+        const li = document.createElement('li');
+        // justify-center와 text-center를 추가해 글씨를 가운데로 보냅니다.
+        li.className = "flex items-center justify-between p-3 bg-gray-50 border-2 border-black rounded-lg hover:translate-x-1 transition-transform";
+        li.innerHTML = `
+            <div class="flex-1 text-center">
+                <span class="font-bold ml-10">${text}</span>
+            </div>
+            <button onclick="completeTodo(this)" class="px-3 py-1 bg-[#FFD562] border-2 border-black rounded-md text-xs font-black shadow-[2px_2px_0px_0px_black] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] shrink-0">완료</button>
+        `;
+        todoList.appendChild(li);
+    }
+
+    function completeTodo(btn) {
+        const li = btn.parentElement;
+        const text = li.querySelector('span').innerText;
+        
+        const doneLi = document.createElement('li');
+        doneLi.className = "flex items-center justify-between p-3 bg-orange-50 border-2 border-[#FF7043] rounded-lg opacity-80";
+        doneLi.innerHTML = `
+            <div class="flex-1 text-center">
+                <span class="line-through text-gray-400 font-bold ml-10">${text}</span>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-red-500 font-black text-xs shrink-0">삭제</button>
+        `;
+        
+        li.remove();
+        doneList.appendChild(doneLi);
+    }
+</script>
